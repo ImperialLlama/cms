@@ -60,7 +60,7 @@
     {% if phase == -1 %}
     <h1>{{ _("Sign up") }}</h1>
     <p>{{ _("Please enter your data") }}</p>
-    <form class="form-horizontal" action="{{ url_root }}/register" method="POST">
+    <form class="form-horizontal" action="{{ url_root }}/signup" method="POST">
       {% module xsrf_form_html() %}
       <input type="hidden" name="next" value="{{ handler.get_argument("next", "/signup_successful=true") }}">
       <fieldset>

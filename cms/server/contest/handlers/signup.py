@@ -128,10 +128,6 @@ class SignupHandler(BaseHandler):
 
         self.render("signup.html", **self.r_params)
 
-
-class RegisterHandler(BaseHandler):
-    """Register handler
-    """
     def post(self):
         username = self.get_argument("username", "")
         first_name = self.get_argument("first_name", "")

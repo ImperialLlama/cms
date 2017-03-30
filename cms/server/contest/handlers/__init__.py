@@ -62,9 +62,7 @@ from .communication import \
     CommunicationHandler, \
     QuestionHandler
 from .signup import \
-    SignupHandler, \
-    RegisterHandler
-
+    SignupHandler
 
 HANDLERS = [
 
@@ -74,7 +72,6 @@ HANDLERS = [
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),
     (r"/signup", SignupHandler),
-    (r"/register", RegisterHandler),
     (r"/start", StartHandler),
     (r"/notifications", NotificationsHandler),
     (r"/printing", PrintingHandler),
