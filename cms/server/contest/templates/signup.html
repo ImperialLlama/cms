@@ -11,6 +11,14 @@
   <link rel="stylesheet" href="{{ url_root }}/static/css/bootstrap.css">
   <link rel="stylesheet" href="{{ url_root }}/static/cws_style.css">
 
+  {% if contest.enable_recaptcha %}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+  function onSubmit(token) {
+    document.getElementById("signup").submit();
+  }
+  </script>
+  {% end %}
   <title>Sign up for {{ contest.description }}</title>
 
   <script type="text/javascript">
@@ -55,12 +63,21 @@
         </div>
 {% end %}
 
+{% if handler.get_argument("failed_recaptcha", "") != "" %}
+        <div id="notifications" class="notifications">
+            <div class="alert alert-block alert-error notification">
+                <a class="close" data-dismiss="alert" href="#">&#xD7;</a>
+                <h4 class="alert-heading">{{ _("Please prove that you are human") }}</h4>
+            </div>
+        </div>
+{% end %}
+
 <div class="login_container">
   <div class="login_box hero-unit">
     {% if phase == -1 %}
     <h1>{{ _("Sign up") }}</h1>
     <p>{{ _("Please enter your data") }}</p>
-    <form class="form-horizontal" action="{{ url_root }}/signup" method="POST">
+    <form id="signup" class="form-horizontal" action="{{ url_root }}/signup" method="POST">
       {% module xsrf_form_html() %}
       <input type="hidden" name="next" value="{{ handler.get_argument("next", "/signup_successful=true") }}">
       <fieldset>
@@ -108,7 +125,11 @@
 
         <div class="control-group">
           <div class="controls">
+            {% if not contest.enable_recaptcha %}
             <button type="submit" class="btn btn-primary btn-large">{{ _("Register") }}</button>
+            {% else %}
+            <button type="submit" class="btn btn-primary btn-large g-recaptcha" data-sitekey="{{ contest.recaptcha_site_key }}" data-callback='onSubmit'>{{ _("Register") }}</button>
+            {% end %}
             <button type="reset" class="btn btn-large">{{ _("Reset") }}</button>
           </div>
         </div>

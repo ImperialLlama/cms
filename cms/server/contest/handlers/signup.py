@@ -28,6 +28,7 @@ import logging
 import datetime
 
 import tornado.web
+import requests
 
 from cms.db import Participation, User, SessionGen, Contest, Team
 from cmscommon.crypto import generate_random_password
@@ -113,6 +114,17 @@ def add_participation(username, contest_id, ip=None, delay_time=None,
     return True
 
 
+def verify_recaptcha(secret_key, response=None, remote_ip=None):
+    VERITY_URL = "https://www.google.com/recaptcha/api/siteverify"
+    data = {
+        "secret": secret_key,
+        "response": response,
+        "remoteip": remote_ip
+    }
+    r = requests.get(VERITY_URL, params=data)
+    return r.json()["success"] if r.status_code == 200 else False
+
+
 class SignupHandler(BaseHandler):
     """Displays the signup interface
     """
@@ -135,6 +147,7 @@ class SignupHandler(BaseHandler):
         email = self.get_argument("email", "")
         password = self.get_argument("password", "")
         confirm_password = self.get_argument("confirm_password", "")
+        recaptcha_response = self.get_argument("g-recaptcha-response", "")
 
         if not self.contest.allow_signup:
             raise tornado.web.HTTPError(404)
@@ -158,6 +171,11 @@ class SignupHandler(BaseHandler):
         if user is not None and participation is not None:
             self.redirect("/signup?user_exists=true")
             return
+
+        if self.contest.enable_recaptcha:
+            if not verify_recaptcha(self.contest.recaptcha_secret_key, recaptcha_response):
+                self.redirect("/signup?failed_recaptcha=true")
+                return
 
         if user is None:
             add_user(

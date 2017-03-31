@@ -105,6 +105,22 @@ class Contest(Base):
         nullable=False,
         default=False)
 
+    # Whether to enable a reCAPTCHA on the signup interface
+    enable_recaptcha = Column(
+        Boolean,
+        nullable=False,
+        default=False)
+
+    recaptcha_site_key = Column(
+        Unicode,
+        nullable=False,
+        default="")
+
+    recaptcha_secret_key = Column(
+        Unicode,
+        nullable=False,
+        default="")
+
     # Whether to prevent hidden participations to log in.
     block_hidden_participations = Column(
         Boolean,
