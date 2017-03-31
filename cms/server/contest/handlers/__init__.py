@@ -61,7 +61,8 @@ from .taskusertest import \
 from .communication import \
     CommunicationHandler, \
     QuestionHandler
-
+from .signup import \
+    SignupHandler
 
 HANDLERS = [
 
@@ -70,6 +71,7 @@ HANDLERS = [
     (r"/", MainHandler),
     (r"/login", LoginHandler),
     (r"/logout", LogoutHandler),
+    (r"/signup", SignupHandler),
     (r"/start", StartHandler),
     (r"/notifications", NotificationsHandler),
     (r"/printing", PrintingHandler),
